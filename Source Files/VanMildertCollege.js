@@ -164,19 +164,15 @@ function main() {
 
 var angleStep = 2.0;     // The increments of rotation angle (degrees)
 
-var duckPosition = 0;
-var duckAngle = 0.0;
-
-var modelCounter = 0;
+var duckCounter = 0;
+var swanCounter = 0;
 function moveModels(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix){
 	
-	modelCounter += 1;
-	if (modelCounter % 60 == 0) {modelCounter = 0;}
+	duckCounter += 1;
+	if (duckCounter % 360 == 0) {duckCounter = 0;}
 	
-	duckPosition += 1;
-	
-	duckAngle += 1;
-	if (duckAngle % 360 == 0.0) {duckAngle = 0.0;}
+	swanCounter += 0.5;
+	if (swanCounter % 360 == 0) {swanCounter = 0;}
 	
 	draw(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 }
@@ -184,6 +180,7 @@ function moveModels(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix){
 function toRadians (angle) {
   return angle * (Math.PI / 180);
 }
+
 //keydown.rotation = 0.0;
 //keydown.position = [0.0, characterHeight, 200.0];
 function keydown(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {	
@@ -357,17 +354,10 @@ function draw(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	
 	drawWater(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	
-	pushMatrix(g_modelMatrix);
-	drawDuck(gl, n, 20.0, 2.0, -20.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
-	g_modelMatrix = popMatrix();
+	drawDuck(gl, n, false, 20.0, 2.0, -40.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
+	drawDuck(gl, n, true, -20.0, 2.0, -40.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	
-	pushMatrix(g_modelMatrix);
-	drawDuck(gl, n, -20.0, 2.0, -20.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
-	g_modelMatrix = popMatrix();
-	
-	pushMatrix(g_modelMatrix);
-	drawSwan(gl, n, 0.0, 0.0, 20.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
-	g_modelMatrix = popMatrix();
+	drawSwan(gl, n, 0.0, 0.0, 40.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 }
 
 function drawLeftBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
@@ -430,13 +420,18 @@ function drawWater(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	]), "water");
 }
 
-function drawDuck(gl, n, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
+function drawDuck(gl, n, reverse, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	//// Draw a Duck
 	// Draw Body
-  g_modelMatrix.setTranslate(x,y,z);
 	
-	g_modelMatrix.rotate(duckAngle, 0.0, -1.0, 0.0);
-	g_modelMatrix.translate(10*Math.cos(duckPosition/360), 0.0, 10*Math.sin(duckPosition/360));
+	if (!reverse) {
+		g_modelMatrix.setTranslate(10 * Math.cos(toRadians(duckCounter)) + x, y, 10 * Math.sin(toRadians(duckCounter)) + z);
+		g_modelMatrix.rotate(duckCounter, 0.0, -1.0, 0.0);
+	}
+	else {
+		g_modelMatrix.setTranslate(-10 * Math.cos(toRadians(duckCounter)) + x, y, 10 * Math.sin(toRadians(duckCounter)) + z);
+		g_modelMatrix.rotate(duckCounter, 0.0, 1.0, 0.0);
+	}
 	
 	g_modelMatrix.translate(0.0, 3.0, 0.0);
   drawBox(gl, n, 6.0, 6.0, 8.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
@@ -549,10 +544,8 @@ function drawDuck(gl, n, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 function drawSwan(gl, n, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	//// Draw a Swan
 	// Draw Body
-  g_modelMatrix.setTranslate(x,y,z);
-	
-	g_modelMatrix.rotate(duckAngle, 0.0, -1.0, 0.0);
-	g_modelMatrix.translate(10*Math.cos(duckPosition/720), 0.0, 10*Math.sin(duckPosition/720));
+  g_modelMatrix.setTranslate(50 * Math.cos(toRadians(swanCounter)) + x, y, 20 * Math.sin(toRadians(swanCounter)) + z);
+	g_modelMatrix.rotate(swanCounter, 0.0, -1.0, 0.0);
 	
 	g_modelMatrix.translate(0.0, 2 * 3.0, 0.0);
   drawBox(gl, n, 2 * 6.0, 2 * 6.0 - 2.0, 2 * 8.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
