@@ -93,7 +93,7 @@ function main() {
   // Calculate the view projection matrix
   var viewProjMatrix = new Matrix4();
   viewProjMatrix.setPerspective(60.0, canvas.width / canvas.height, 1.0, 1000.0);
-  viewProjMatrix.lookAt(0.0, characterHeight, 150.0, 0.0, 0.0, -1000.0, 0.0, 1.0, 0.0);
+  viewProjMatrix.lookAt(0.0, characterHeight, 200.0, 0.0, 0.0, -1000.0, 0.0, 1.0, 0.0);
 	
   // Set the light color (white)
   gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
@@ -131,31 +131,70 @@ function moveModels(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix){
 	draw(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 }
 
+function toRadians (angle) {
+  return angle * (Math.PI / 180);
+}
+
 function keydown(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
+	if( typeof keydown.rotation == 'undefined' ) {
+    keydown.rotation = 0.0;
+  }
+	if( typeof keydown.position == 'undefined' ) {
+    keydown.position = [0.0, characterHeight, 200.0];
+  }
+	
   switch (ev.keyCode) {
-    case 40: // Up arrow key
-      viewProjMatrix.rotate(angleStep, 1.0, 0.0, 0.0)
+    case 16: // Shift key
+      if (keydown.position[1] < 200.0) {
+				viewProjMatrix.translate(0.0, -5.0, 0.0)
+				keydown.position[1] += 5.0
+			}
       break;
-    case 38: // Down arrow key
+    case 17: // Ctrl key
+      if (keydown.position[1] > 15.0) {
+				viewProjMatrix.translate(0.0, 5.0, 0.0)
+				keydown.position[1] -= 5.0
+			}
+      break;
+		case 38: // Up arrow key
+			viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
       viewProjMatrix.rotate(angleStep, -1.0, 0.0, 0.0)
+			viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
+			
+			keydown.rotation += 2.0
       break;
-    case 39: // Right arrow key
+    case 40: // Down arrow key
+      viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
+      viewProjMatrix.rotate(angleStep, 1.0, 0.0, 0.0)
+			viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
+			
+			keydown.rotation -= 2.0
+      break;	
+		case 39: // Right arrow key
+			viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
       viewProjMatrix.rotate(angleStep, 0.0, 1.0, 0.0)
+			viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
+			
+			keydown.rotation += 2.0
       break;
     case 37: // Left arrow key
+      viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
       viewProjMatrix.rotate(angleStep, 0.0, -1.0, 0.0)
+			viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
+			
+			keydown.rotation -= 2.0
       break;
 		case 87: // W key
-      viewProjMatrix.translate(0.0, 0.0, 5.0)
+      viewProjMatrix.translate(-5.0 * Math.sin(toRadians(keydown.rotation)), 0.0, 5.0 * Math.cos(toRadians(keydown.rotation)))
       break;
     case 68: // D key
-      viewProjMatrix.translate(-5.0, 0.0, 0.0)
+      viewProjMatrix.translate(-5.0 * Math.cos(toRadians(keydown.rotation)), 0.0, -5.0 * Math.sin(toRadians(keydown.rotation)))
       break;
 		case 83: // S key
-      viewProjMatrix.translate(0.0, 0.0, -5.0)
+      viewProjMatrix.translate(5.0 * Math.sin(toRadians(keydown.rotation)), 0.0, -5.0 * Math.cos(toRadians(keydown.rotation)))
       break;
 		case 65: // A key
-      viewProjMatrix.translate(5.0, 0.0, 0.0)
+      viewProjMatrix.translate(5.0 * Math.cos(toRadians(keydown.rotation)), 0.0, 5.0 * Math.sin(toRadians(keydown.rotation)))
       break;
     default: return; // Skip drawing at no effective action
   }
@@ -656,8 +695,6 @@ function drawBox(gl, n, width, height, depth, viewProjMatrix, u_MvpMatrix, u_Nor
 			gl.bindTexture(gl.TEXTURE_2D, tex);
 			gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255,255,255,255]));
 		}
-		
-		
 		
     // Calculate the model view project matrix and pass it to u_MvpMatrix
     g_mvpMatrix.set(viewProjMatrix);
