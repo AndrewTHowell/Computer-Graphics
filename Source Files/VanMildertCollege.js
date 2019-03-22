@@ -396,7 +396,7 @@ function draw(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 					 drawBushelOfReeds(gl, n, 15.0, 6.0, 4.0, 5.0, 2.2, 100.0, 5.0, 50.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	if(!LQ){ drawBushelOfReeds(gl, n,  0.0, 6.0, 4.0, 4.5, 2.2, 100.0, 5.0, 62.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);};
 	
-	if(!LQ){ drawFountain(gl, n, 130.0, 5.0, 120.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);};
+	drawFountain(gl, n, 130.0, 5.0, 120.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 }
 
 function drawLeftBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
