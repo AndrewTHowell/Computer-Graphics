@@ -1397,7 +1397,8 @@ function drawBox(gl, n, width, height, depth, viewProjMatrix, u_MvpMatrix, u_Nor
 		
 		if (!initArrayBuffer(gl, 'a_Color', colors, gl.FLOAT, 3)) return -1;
 	
-		if (texture == "grass"){
+		var LQ = document.getElementById("LQ").checked;
+		if (texture == "grass" && !LQ){
 			// Get the storage location of u_Sampler
 			var u_Sampler = gl.getUniformLocation(gl.program, 'u_Sampler');
 			if (!u_Sampler) {
