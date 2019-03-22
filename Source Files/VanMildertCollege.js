@@ -111,24 +111,48 @@ function main() {
 	if( typeof keydown.position == 'undefined' ) {
     keydown.position = [0.0, characterHeight, 200.0];
   }
-
-	//canvas.mousemove = function(ev){ onMouseMove(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix); };
 	
-	canvas.onclick = function() {
+	document.getElementById("mouseButton").onclick = function() {
 		canvas.requestPointerLock();
 	}
 	
 	document.addEventListener('pointerlockchange', lockChangeAlert, false);
 	document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
 	
+	var mouseMoveX = function(movementX){
+		viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2]);
+		viewProjMatrix.rotate(movementX, 0.0, 1.0, 0.0);
+		viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2]);
+		
+		keydown.rotation -= movementX;
+	}
+	
+	var mouseMoveY = function(movementY){
+		viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2]);
+		viewProjMatrix.rotate(movementY, 1.0, 0.0, 0.0); // Y
+		viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2]);
+	}
+	
+	var mouseMoveFunc = function(ev){
+		console.log(ev.movementX, ev.movementY);
+		
+		if(ev.movementX !=  0){
+			mouseMoveX(ev.movementX);
+		}
+		
+		if(ev.movementY !=  0){
+			mouseMoveY(ev.movementY);
+		}
+	}
+	
 	function lockChangeAlert() {
 		if (document.pointerLockElement === canvas || document.mozPointerLockElement === canvas) {
 			console.log('The pointer lock status is now locked');
-			canvas.addEventListener("mousemove", function(ev) {onMouseMove(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);}, false);
+			canvas.addEventListener("mousemove", mouseMoveFunc, false);
 		}
 		else {
 			console.log('The pointer lock status is now unlocked');
-			canvas.removeEventListener("mousemove", function(ev) {onMouseMove(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);}, false);
+			canvas.removeEventListener("mousemove", mouseMoveFunc);
 		}
 	}
 	
@@ -160,39 +184,8 @@ function moveModels(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix){
 function toRadians (angle) {
   return angle * (Math.PI / 180);
 }
-
-function onMouseMove(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix){
-	console.log(ev.movementX, ev.movementY)
-	if (ev.movementX < 0) { // Left
-		viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
-		viewProjMatrix.rotate(angleStep, 0.0, -1.0, 0.0)
-		viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
-		
-		keydown.rotation -= 2.0
-	}
-	else if (ev.movementX > 0) { // Right
-		viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
-		viewProjMatrix.rotate(angleStep, 0.0, 1.0, 0.0)
-		viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
-		
-		keydown.rotation -= 2.0
-	}
-	if (ev.movementY > 0) { // Down
-		viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
-		viewProjMatrix.rotate(angleStep, 1.0, 0.0, 0.0)
-		viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
-		
-		keydown.rotation -= 2.0
-	}
-	else if (ev.movementY < 0) { // Up
-		viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
-		viewProjMatrix.rotate(angleStep, -1.0, 0.0, 0.0)
-		viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
-		
-		keydown.rotation += 2.0
-	}
-}
-
+//keydown.rotation = 0.0;
+//keydown.position = [0.0, characterHeight, 200.0];
 function keydown(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {	
   switch (ev.keyCode) {
     case 16: // Shift key
@@ -211,15 +204,11 @@ function keydown(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 			viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
       viewProjMatrix.rotate(angleStep, -1.0, 0.0, 0.0)
 			viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
-			
-			keydown.rotation += 2.0
       break;
     case 40: // Down arrow key
       viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
       viewProjMatrix.rotate(angleStep, 1.0, 0.0, 0.0)
 			viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
-			
-			keydown.rotation -= 2.0
       break;	
 		case 39: // Right arrow key
 			viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
@@ -236,16 +225,32 @@ function keydown(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 			keydown.rotation -= 2.0
       break;
 		case 87: // W key
-      viewProjMatrix.translate(-5.0 * Math.sin(toRadians(keydown.rotation)), 0.0, 5.0 * Math.cos(toRadians(keydown.rotation)))
+			var xChange = -5.0 * Math.sin(toRadians(keydown.rotation));
+			var zChange = 5.0 * Math.cos(toRadians(keydown.rotation))
+      viewProjMatrix.translate(xChange, 0.0, zChange)
+			keydown.position[0] -= xChange
+			keydown.position[2] -= zChange
       break;
     case 68: // D key
-      viewProjMatrix.translate(-5.0 * Math.cos(toRadians(keydown.rotation)), 0.0, -5.0 * Math.sin(toRadians(keydown.rotation)))
+			var xChange = -5.0 * Math.cos(toRadians(keydown.rotation));
+			var zChange = -5.0 * Math.sin(toRadians(keydown.rotation))
+      viewProjMatrix.translate(xChange, 0.0, zChange)
+			keydown.position[0] -= xChange
+			keydown.position[2] -= zChange
       break;
 		case 83: // S key
-      viewProjMatrix.translate(5.0 * Math.sin(toRadians(keydown.rotation)), 0.0, -5.0 * Math.cos(toRadians(keydown.rotation)))
+			var xChange = 5.0 * Math.sin(toRadians(keydown.rotation));
+			var zChange = -5.0 * Math.cos(toRadians(keydown.rotation))
+      viewProjMatrix.translate(xChange, 0.0, zChange)
+			keydown.position[0] -= xChange
+			keydown.position[2] -= zChange
       break;
 		case 65: // A key
-      viewProjMatrix.translate(5.0 * Math.cos(toRadians(keydown.rotation)), 0.0, 5.0 * Math.sin(toRadians(keydown.rotation)))
+			var xChange = 5.0 * Math.cos(toRadians(keydown.rotation));
+			var zChange = 5.0 * Math.sin(toRadians(keydown.rotation))
+      viewProjMatrix.translate(xChange, 0.0, zChange)
+			keydown.position[0] -= xChange
+			keydown.position[2] -= zChange
       break;
     default: return; // Skip drawing at no effective action
   }
