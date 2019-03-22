@@ -49,8 +49,8 @@ var FSHADER_SOURCE =
   '  vec3 ambient = u_AmbientLight * v_Color.rgb;\n' +
   '  gl_FragColor = vec4(diffuse + ambient, v_Color.a);\n' +
   '}\n';
-	
-var characterHeight = 50.0;
+
+var STARTPOSITION = [0.0, 50.0, 200.0];
 
 function main() {
   // Retrieve <canvas> element
@@ -93,7 +93,7 @@ function main() {
   // Calculate the view projection matrix
   var viewProjMatrix = new Matrix4();
   viewProjMatrix.setPerspective(60.0, canvas.width / canvas.height, 1.0, 1000.0);
-  viewProjMatrix.lookAt(0.0, characterHeight, 200.0, 0.0, characterHeight, -500.0, 0.0, 1.0, 0.0);
+  viewProjMatrix.lookAt(0.0, STARTPOSITION[1], 200.0, 0.0, STARTPOSITION[1], -500.0, 0.0, 1.0, 0.0);
 	
 	var multiplier = 2;
 	var starterValue = 40;
@@ -125,10 +125,10 @@ function main() {
   // Register the event handler to be called on key press
   document.onkeydown = function(ev){ keydown(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix); };
 	if( typeof keydown.rotation == 'undefined' ) {
-    keydown.rotation = 0.0;
+    keydown.rotation = [0.0, 0.0];
   }
 	if( typeof keydown.position == 'undefined' ) {
-    keydown.position = [0.0, characterHeight, 200.0];
+    keydown.position = STARTPOSITION;
   }
 	
 	canvas.onclick = function() {
