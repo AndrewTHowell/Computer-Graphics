@@ -50,7 +50,7 @@ var FSHADER_SOURCE =
   '  gl_FragColor = vec4(diffuse + ambient, v_Color.a);\n' +
   '}\n';
 	
-var characterHeight = 40.0;
+var characterHeight = 50.0;
 
 function main() {
   // Retrieve <canvas> element
@@ -93,32 +93,30 @@ function main() {
   // Calculate the view projection matrix
   var viewProjMatrix = new Matrix4();
   viewProjMatrix.setPerspective(60.0, canvas.width / canvas.height, 1.0, 1000.0);
-  viewProjMatrix.lookAt(0.0, characterHeight, 200.0, 0.0, 0.0, -1000.0, 0.0, 1.0, 0.0);
+  viewProjMatrix.lookAt(0.0, characterHeight, 200.0, 0.0, characterHeight, -500.0, 0.0, 1.0, 0.0);
 	
+	var multiplier = 2;
+	var starterValue = 40;
   // Set the light color (white)
-  gl.uniform3f(u_LightColor, 1.0, 1.0, 1.0);
+  gl.uniform3f(u_LightColor, 1.0, (150 + 105*(Math.sin(toRadians(starterValue*multiplier))))/255, (30 + 225*(Math.sin(toRadians(starterValue*multiplier))))/255);
   // Set the light direction (in the world coordinate)
-  gl.uniform3f(u_LightPosition, 2.3, 4.0, 3.5);
+  gl.uniform3f(u_LightPosition, 250*(Math.cos(toRadians(starterValue*multiplier))), 40 + 210*(Math.sin(toRadians(starterValue*multiplier))), 20 + 230*(Math.sin(toRadians(starterValue*multiplier))));
   // Set the ambient light
   gl.uniform3f(u_AmbientLight, 0.35, 0.35, 0.35);
 	
-	var sliderFunc = function changeLighting(){
-		var multiplier = 90;
-		// slider.value 0 --> 36
+	var sliderFunc = function changeLighting(){	
 		// Set the light color (white)
-		gl.uniform3f(u_LightColor, 255/255, 255/255, 255/255);
-		//gl.uniform3f(u_LightColor, 255/255, 200/255, 100/255);
-		//gl.uniform3f(u_LightColor, 255/255, (200 + 55*(Math.sin(toRadians(slider.value*multiplier))))/255, (100 + 155*(Math.sin(toRadians(slider.value*multiplier))))/255);
+		//gl.uniform3f(u_LightColor, 255/255, 255/255, 255/255);
+		//gl.uniform3f(u_LightColor, 255/255, 150/255, 30/255);
+		gl.uniform3f(u_LightColor, 255/255, (150 + 105*(Math.sin(toRadians(slider.value*multiplier))))/255, (30 + 225*(Math.sin(toRadians(slider.value*multiplier))))/255);
+		
 		// Set the light direction (in the world coordinate)
-		gl.uniform3f(u_LightPosition, 0, 250, 250);
+		//gl.uniform3f(u_LightPosition, 0, 250, 250);
 		//gl.uniform3f(u_LightPosition, 250, 40, 20);
-		console.log(250 - (Math.sin(toRadians(slider.value*10))))
-		console.log(40 + 210*(Math.sin(toRadians(slider.value*10))))
-		console.log(20 + 230*(Math.sin(toRadians(slider.value*10))))
-		gl.uniform3f(u_LightPosition, -250*(Math.sin(toRadians(slider.value*multiplier))), 40 + 210*(Math.sin(toRadians(slider.value*multiplier))), 20 + 230*(Math.sin(toRadians(slider.value*multiplier))));
+		gl.uniform3f(u_LightPosition, 250*(Math.cos(toRadians(slider.value*multiplier))), 40 + 210*(Math.sin(toRadians(slider.value*multiplier))), 20 + 230*(Math.sin(toRadians(slider.value*multiplier))));
 		
 		// Set the ambient light
-		gl.uniform3f(u_AmbientLight, 0.25, 0.25, 0.25);
+		gl.uniform3f(u_AmbientLight, 0.3, 0.3, 0.3);
 	}
 	
 	var slider = document.getElementById("slider");
@@ -203,7 +201,7 @@ function moveModels(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix){
 }
 
 function toRadians (angle) {
-  return angle * (Math.PI / 180);
+  return (angle/ 180) * Math.PI;
 }
 
 //keydown.rotation = 0.0;
@@ -375,7 +373,7 @@ function draw(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	drawRightBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	drawBottomBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	
-	drawBuilding1(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
+	drawBuilding(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	
 	drawWater(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	
@@ -459,9 +457,9 @@ function drawBottomBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	]), "grass");
 }
 
-function drawBuilding1(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
+function drawBuilding(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	g_modelMatrix.setTranslate(0.0, 0.0, -150.0);
-	drawBox(gl, n, 230.0, 300, 100.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	drawBox(gl, n, 230.0, 250, 100.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		255/255,255/255,255/255, 255/255,255/255,255/255, 255/255,255/255,255/255, 255/255,255/255,255/255,  // v0-v1-v2-v3 front
 		255/255,255/255,255/255, 255/255,255/255,255/255, 255/255,255/255,255/255, 255/255,255/255,255/255,  // v0-v3-v4-v5 right
 		255/255,255/255,255/255, 255/255,255/255,255/255, 255/255,255/255,255/255, 255/255,255/255,255/255,  // v0-v5-v6-v1 up
@@ -780,34 +778,34 @@ function drawSwan(gl, n, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	
 	g_modelMatrix.translate(0.0, 2 * 3.0, 0.0);
   drawBox(gl, n, 2 * 6.0, 2 * 6.0 - 2.0, 2 * 8.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
-		150/255,150/255,150/255, 150/255,150/255,150/255, 150/255,150/255,150/255, 150/255,150/255,150/255,  // v0-v1-v2-v3 front
-		150/255,150/255,150/255, 150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255,  // v0-v3-v4-v5 right
-		150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255,  // v0-v5-v6-v1 up
-		150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255,  // v1-v6-v7-v2 left
-		200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255, 150/255,150/255,150/255,  // v7-v4-v3-v2 down
-		150/255,150/255,150/255, 150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255　  // v4-v7-v6-v5 back
+		190/255,190/255,190/255, 190/255,190/255,190/255, 190/255,190/255,190/255, 190/255,190/255,190/255,  // v0-v1-v2-v3 front
+		190/255,190/255,190/255, 190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255,  // v0-v3-v4-v5 right
+		190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255,  // v0-v5-v6-v1 up
+		190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255,  // v1-v6-v7-v2 left
+		240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255, 190/255,190/255,190/255,  // v7-v4-v3-v2 down
+		190/255,190/255,190/255, 190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255　  // v4-v7-v6-v5 back
 	]), null);
 
 	// Draw Head
 		g_modelMatrix.translate(2 * 0.0, 2 * 4.0 - 2.0, 2 * 4.5);
 		drawBox(gl, n, 2 * 4.0, 2 * 6.0, 2 * 3.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
-		150/255,150/255,150/255, 150/255,150/255,150/255, 150/255,150/255,150/255, 150/255,150/255,150/255,  // v0-v1-v2-v3 front
-		150/255,150/255,150/255, 150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255,  // v0-v3-v4-v5 right
-		150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255,  // v0-v5-v6-v1 up
-		150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255,  // v1-v6-v7-v2 left
-		200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255, 150/255,150/255,150/255,  // v7-v4-v3-v2 down
-		150/255,150/255,150/255, 150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255　  // v4-v7-v6-v5 back
+		190/255,190/255,190/255, 190/255,190/255,190/255, 190/255,190/255,190/255, 190/255,190/255,190/255,  // v0-v1-v2-v3 front
+		190/255,190/255,190/255, 190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255,  // v0-v3-v4-v5 right
+		190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255,  // v0-v5-v6-v1 up
+		190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255,  // v1-v6-v7-v2 left
+		240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255, 190/255,190/255,190/255,  // v7-v4-v3-v2 down
+		190/255,190/255,190/255, 190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255　  // v4-v7-v6-v5 back
 	]), null);
   
 		// Draw Beak
 		g_modelMatrix.translate(2 * 0.0, 2 * 1.0, 2 * 2.5);
 		drawBox(gl, n, 2 * 3.0, 2 * 2.0, 2 * 2.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		225/255,185/255, 50/255, 225/255,185/255, 50/255, 225/255,185/255, 50/255, 225/255,185/255, 50/255,  // v0-v1-v2-v3 front
-		225/255,185/255, 50/255, 225/255,185/255, 50/255, 200/255,130/255, 40/255, 200/255,130/255, 40/255,  // v0-v3-v4-v5 right
-		225/255,185/255, 50/255, 200/255,130/255, 40/255, 200/255,130/255, 40/255, 225/255,185/255, 50/255,  // v0-v5-v6-v1 up
-		225/255,185/255, 50/255, 200/255,130/255, 40/255, 200/255,130/255, 40/255, 225/255,185/255, 50/255,  // v1-v6-v7-v2 left
-		200/255,130/255, 40/255, 200/255,130/255, 40/255, 225/255,185/255, 50/255, 225/255,185/255, 50/255,  // v7-v4-v3-v2 down
-		200/255,130/255, 40/255, 200/255,130/255, 40/255, 200/255,130/255, 40/255, 200/255,130/255, 40/255,   // v4-v7-v6-v5 back
+		225/255,185/255, 50/255, 225/255,185/255, 50/255, 240/255,130/255, 40/255, 240/255,130/255, 40/255,  // v0-v3-v4-v5 right
+		225/255,185/255, 50/255, 240/255,130/255, 40/255, 240/255,130/255, 40/255, 225/255,185/255, 50/255,  // v0-v5-v6-v1 up
+		225/255,185/255, 50/255, 240/255,130/255, 40/255, 240/255,130/255, 40/255, 225/255,185/255, 50/255,  // v1-v6-v7-v2 left
+		240/255,130/255, 40/255, 240/255,130/255, 40/255, 225/255,185/255, 50/255, 225/255,185/255, 50/255,  // v7-v4-v3-v2 down
+		240/255,130/255, 40/255, 240/255,130/255, 40/255, 240/255,130/255, 40/255, 240/255,130/255, 40/255,   // v4-v7-v6-v5 back
 		]), null);
 	
 		// Draw Right Eye
@@ -843,12 +841,12 @@ function drawSwan(gl, n, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 		g_modelMatrix.rotate(30*Math.sin(toRadians(4*swanCounter)), 0.0, 0.0, 1.0);
 		
 		drawBox(gl, n, 2 * 1.0, 2 * 4.0, 2 * 6.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
-			150/255,150/255,150/255, 150/255,150/255,150/255, 150/255,150/255,150/255, 150/255,150/255,150/255,  // v0-v1-v2-v3 front
-			150/255,150/255,150/255, 150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255,  // v0-v3-v4-v5 right
-			150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255,  // v0-v5-v6-v1 up
-			150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255,  // v1-v6-v7-v2 left
-			200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255, 150/255,150/255,150/255,  // v7-v4-v3-v2 down
-			150/255,150/255,150/255, 150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255　  // v4-v7-v6-v5 back
+			190/255,190/255,190/255, 190/255,190/255,190/255, 190/255,190/255,190/255, 190/255,190/255,190/255,  // v0-v1-v2-v3 front
+			190/255,190/255,190/255, 190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255,  // v0-v3-v4-v5 right
+			190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255,  // v0-v5-v6-v1 up
+			190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255,  // v1-v6-v7-v2 left
+			240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255, 190/255,190/255,190/255,  // v7-v4-v3-v2 down
+			190/255,190/255,190/255, 190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255　  // v4-v7-v6-v5 back
 		]), null);
 	g_modelMatrix = popMatrix();
 	
@@ -862,12 +860,12 @@ function drawSwan(gl, n, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 		
 		g_modelMatrix.rotate(30*Math.sin(toRadians(4*swanCounter)), 0.0, 0.0, -1.0);
 		drawBox(gl, n, 2 * 1.0, 2 * 4.0, 2 * 6.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
-			150/255,150/255,150/255, 150/255,150/255,150/255, 150/255,150/255,150/255, 150/255,150/255,150/255,  // v0-v1-v2-v3 front
-			150/255,150/255,150/255, 150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255,  // v0-v3-v4-v5 right
-			150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255,  // v0-v5-v6-v1 up
-			150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255,  // v1-v6-v7-v2 left
-			200/255,200/255,200/255, 200/255,200/255,200/255, 150/255,150/255,150/255, 150/255,150/255,150/255,  // v7-v4-v3-v2 down
-			150/255,150/255,150/255, 150/255,150/255,150/255, 200/255,200/255,200/255, 200/255,200/255,200/255　  // v4-v7-v6-v5 back
+			190/255,190/255,190/255, 190/255,190/255,190/255, 190/255,190/255,190/255, 190/255,190/255,190/255,  // v0-v1-v2-v3 front
+			190/255,190/255,190/255, 190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255,  // v0-v3-v4-v5 right
+			190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255,  // v0-v5-v6-v1 up
+			190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255,  // v1-v6-v7-v2 left
+			240/255,240/255,240/255, 240/255,240/255,240/255, 190/255,190/255,190/255, 190/255,190/255,190/255,  // v7-v4-v3-v2 down
+			190/255,190/255,190/255, 190/255,190/255,190/255, 240/255,240/255,240/255, 240/255,240/255,240/255　  // v4-v7-v6-v5 back
 		]), null);
 	g_modelMatrix = popMatrix();
 	
