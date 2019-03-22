@@ -76,7 +76,7 @@ function main() {
     return;
   }
 
-  // Set the clear color and enable the depth test
+  // Set the sky color and enable the depth test
   gl.clearColor(0.0, 1.0, 1.0, 0.8);
   gl.enable(gl.DEPTH_TEST);
 
@@ -100,8 +100,29 @@ function main() {
   // Set the light direction (in the world coordinate)
   gl.uniform3f(u_LightPosition, 2.3, 4.0, 3.5);
   // Set the ambient light
-  gl.uniform3f(u_AmbientLight, 0.5, 0.5, 0.5);
+  gl.uniform3f(u_AmbientLight, 0.35, 0.35, 0.35);
 	
+	var sliderFunc = function changeLighting(){
+		var multiplier = 90;
+		// slider.value 0 --> 36
+		// Set the light color (white)
+		gl.uniform3f(u_LightColor, 255/255, 255/255, 255/255);
+		//gl.uniform3f(u_LightColor, 255/255, 200/255, 100/255);
+		//gl.uniform3f(u_LightColor, 255/255, (200 + 55*(Math.sin(toRadians(slider.value*multiplier))))/255, (100 + 155*(Math.sin(toRadians(slider.value*multiplier))))/255);
+		// Set the light direction (in the world coordinate)
+		gl.uniform3f(u_LightPosition, 0, 250, 250);
+		//gl.uniform3f(u_LightPosition, 250, 40, 20);
+		console.log(250 - (Math.sin(toRadians(slider.value*10))))
+		console.log(40 + 210*(Math.sin(toRadians(slider.value*10))))
+		console.log(20 + 230*(Math.sin(toRadians(slider.value*10))))
+		gl.uniform3f(u_LightPosition, -250*(Math.sin(toRadians(slider.value*multiplier))), 40 + 210*(Math.sin(toRadians(slider.value*multiplier))), 20 + 230*(Math.sin(toRadians(slider.value*multiplier))));
+		
+		// Set the ambient light
+		gl.uniform3f(u_AmbientLight, 0.25, 0.25, 0.25);
+	}
+	
+	var slider = document.getElementById("slider");
+	slider.addEventListener("input", sliderFunc);
 
   // Register the event handler to be called on key press
   document.onkeydown = function(ev){ keydown(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix); };
@@ -366,7 +387,7 @@ function draw(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	
 	drawSwan(gl, n, 0.0, 0.0, 40.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	
-	drawReed(gl, n, 0.0, 5.0, 72.5, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
+	drawBushelOfReeds(gl, n, 0, 5.0, 4.0, 5.0, 2.2, -82.5, 5.0, 0.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 }
 
 function drawLeftBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
@@ -873,13 +894,19 @@ function drawSwan(gl, n, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 		]), null);
 }
 
-function drawReed(gl, n, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
+function drawBushelOfReeds(gl, n, offset, lean, speed, sectionLength, distance, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
+	drawReed(gl, n, offset, lean, speed, sectionLength + 1.0, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	drawReed(gl, n, offset - 2, lean, speed, sectionLength + 0.8, x + distance, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	drawReed(gl, n, offset - 2, lean, speed, sectionLength + 0.4, x - distance, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	drawReed(gl, n, offset + 2, lean, speed, sectionLength + 0.6, x, y, z + distance, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	drawReed(gl, n, offset + 2, lean, speed, sectionLength + 0.2, x, y, z - distance, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+}
+
+function drawReed(gl, n, offset, lean, speed, sectionLength, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	//// Draw Reed
-	var lean = 4;
-	var speed = 5;
   g_modelMatrix.setTranslate(x, y, z);
 	
-  drawBox(gl, n, 1.5, 6.0, 1.5, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+  drawBox(gl, n, 1.5, sectionLength, 1.5, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		0/255, 65/255,0/255, 0/255, 65/255,0/255, 0/255, 50/255,0/255, 0/255, 50/255,0/255,  // v0-v1-v2-v3 front
 		0/255, 65/255,0/255, 0/255, 50/255,0/255, 0/255, 50/255,0/255, 0/255, 65/255,0/255,  // v0-v3-v4-v5 right
 		0/255, 65/255,0/255, 0/255, 65/255,0/255, 0/255, 65/255,0/255, 0/255, 65/255,0/255,  // v0-v5-v6-v1 up
@@ -888,9 +915,9 @@ function drawReed(gl, n, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 		0/255, 50/255,0/255, 0/255, 50/255,0/255, 0/255, 65/255,0/255, 0/255, 65/255,0/255　  // v4-v7-v6-v5 back
 	]), null);
 	
-	g_modelMatrix.translate(0.0, 6.0, 0.0);
-	g_modelMatrix.rotate(lean * Math.sin(toRadians(reedCounter*speed)), 1.0, 0.0, 1.0);
-	drawBox(gl, n, 1.25, 6.0, 1.25, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	g_modelMatrix.translate(0.0, sectionLength, 0.0);
+	g_modelMatrix.rotate(lean * Math.sin(toRadians(offset + (reedCounter*speed))), 1.0, 0.0, 1.0);
+	drawBox(gl, n, 1.25, sectionLength, 1.25, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		0/255, 80/255,0/255, 0/255, 80/255,0/255, 0/255, 65/255,0/255, 0/255, 65/255,0/255,  // v0-v1-v2-v3 front
 		0/255, 80/255,0/255, 0/255, 65/255,0/255, 0/255, 65/255,0/255, 0/255, 80/255,0/255,  // v0-v3-v4-v5 right
 		0/255, 80/255,0/255, 0/255, 80/255,0/255, 0/255, 80/255,0/255, 0/255, 80/255,0/255,  // v0-v5-v6-v1 up
@@ -899,9 +926,9 @@ function drawReed(gl, n, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 		0/255, 65/255,0/255, 0/255, 65/255,0/255, 0/255, 80/255,0/255, 0/255, 80/255,0/255　  // v4-v7-v6-v5 back
 	]), null);
 	
-	g_modelMatrix.translate(0.0, 6.0, 0.0);
-	g_modelMatrix.rotate(lean * Math.sin(toRadians(reedCounter*speed)), 1.0, 0.0, 1.0);
-	drawBox(gl, n, 1.0, 6.0, 1.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	g_modelMatrix.translate(0.0, sectionLength, 0.0);
+	g_modelMatrix.rotate(lean * Math.sin(toRadians(offset + (reedCounter*speed))), 1.0, 0.0, 1.0);
+	drawBox(gl, n, 1.0, sectionLength, 1.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		0/255, 95/255,0/255, 0/255, 95/255,0/255, 0/255, 80/255,0/255, 0/255, 80/255,0/255,  // v0-v1-v2-v3 front
 		0/255, 95/255,0/255, 0/255, 80/255,0/255, 0/255, 80/255,0/255, 0/255, 95/255,0/255,  // v0-v3-v4-v5 right
 		0/255, 95/255,0/255, 0/255, 95/255,0/255, 0/255, 95/255,0/255, 0/255, 95/255,0/255,  // v0-v5-v6-v1 up
@@ -910,9 +937,9 @@ function drawReed(gl, n, x, y, z, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 		0/255, 80/255,0/255, 0/255, 80/255,0/255, 0/255, 95/255,0/255, 0/255, 95/255,0/255　  // v4-v7-v6-v5 back
 	]), null);
 	
-	g_modelMatrix.translate(0.0, 6.0, 0.0);
-	g_modelMatrix.rotate(lean * Math.sin(toRadians(reedCounter*speed)), 1.0, 0.0, 1.0);
-	drawBox(gl, n, 0.75, 6.0, 0.75, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	g_modelMatrix.translate(0.0, sectionLength, 0.0);
+	g_modelMatrix.rotate(lean * Math.sin(toRadians(offset + (reedCounter*speed))), 1.0, 0.0, 1.0);
+	drawBox(gl, n, 0.75, sectionLength, 0.75, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		0/255, 105/255,0/255, 0/255, 105/255,0/255, 0/255, 95/255,0/255, 0/255, 95/255,0/255,  // v0-v1-v2-v3 front
 		0/255, 105/255,0/255, 0/255, 95/255,0/255, 0/255, 95/255,0/255, 0/255, 105/255,0/255,  // v0-v3-v4-v5 right
 		0/255, 105/255,0/255, 0/255, 105/255,0/255, 0/255, 105/255,0/255, 0/255, 105/255,0/255,  // v0-v5-v6-v1 up
