@@ -50,7 +50,7 @@ var FSHADER_SOURCE =
   '  gl_FragColor = vec4(diffuse + ambient, v_Color.a);\n' +
   '}\n';
 
-var STARTPOSITION = [0.0, 50.0, 200.0];
+var STARTPOSITION = [0.0, 40.0, 250.0];
 
 function main() {
   // Retrieve <canvas> element
@@ -385,13 +385,13 @@ function draw(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	
 	drawWater(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	
-	////drawDuck(gl, n, false, 20.0, 3.0, -40.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
-	////drawDuck(gl, n, true, -20.0, 3.0, -40.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
+	drawDuck(gl, n, false, -110.0, 3.0, 30.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
+	drawDuck(gl, n, true, -50.0, 3.0, 30.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	
 	////drawFlyingDuck(gl, n, 0.0, 110.0, 0.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	//drawFlyingDuck(gl, n, 20.0, 110.0, 20.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	
-	////drawSwan(gl, n, 0.0, 0.0, 40.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
+	drawSwan(gl, n, -80.0, 0.0, 90.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	
 	//drawBushelOfReeds(gl, n, 0, 4.5, 4.0, 4.0, 2.2, -82.5, 5.0, 65.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	//drawBushelOfReeds(gl, n, 0, 5.0, 4.0, 4.5, 2.2, -82.5, 5.0, 75.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
@@ -400,8 +400,8 @@ function draw(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 }
 
 function drawLeftBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
-	g_modelMatrix.setTranslate(-100.0, 0.0, 0.0);
-	drawBox(gl, n, 30.0, 10, 200.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	g_modelMatrix.setTranslate(-200.0, 0.0, 50.0);
+	drawBox(gl, n, 30.0, 10, 300.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v1-v2-v3 front
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v3-v4-v5 right
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v5-v6-v1 up
@@ -412,7 +412,7 @@ function drawLeftBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	
 	g_modelMatrix.translate(17.5, 2.5, 0.0);
 	g_modelMatrix.rotate(45, 0.0, 0.0, 1.0);
-	drawBox(gl, n, Math.sqrt(50), Math.sqrt(50), 200.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	drawBox(gl, n, Math.sqrt(50), Math.sqrt(50), 300.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v1-v2-v3 front
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v3-v4-v5 right
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v5-v6-v1 up
@@ -423,8 +423,8 @@ function drawLeftBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 }
 
 function drawRightBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
-	g_modelMatrix.setTranslate(100.0, 0.0, 0.0);
-	drawBox(gl, n, 30.0, 10, 200.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	g_modelMatrix.setTranslate(200.0, 0.0, 50.0);
+	drawBox(gl, n, 30.0, 10, 300.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v1-v2-v3 front
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v3-v4-v5 right
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v5-v6-v1 up
@@ -435,7 +435,7 @@ function drawRightBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	
 	g_modelMatrix.translate(-12.5, 2.5, 0.0);
 	g_modelMatrix.rotate(45, 0.0, 0.0, 1.0);
-	drawBox(gl, n, Math.sqrt(50), Math.sqrt(50), 200.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	drawBox(gl, n, Math.sqrt(50), Math.sqrt(50), 300.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v1-v2-v3 front
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v3-v4-v5 right
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v5-v6-v1 up
@@ -446,8 +446,8 @@ function drawRightBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 }
 
 function drawBottomBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
-	g_modelMatrix.setTranslate(0.0, 0.0, 100.0);
-	drawBox(gl, n, 230.0, 10, 30.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	g_modelMatrix.setTranslate(0.0, 0.0, 200.0);
+	drawBox(gl, n, 430.0, 10, 30.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v1-v2-v3 front
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v3-v4-v5 right
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v5-v6-v1 up
@@ -458,7 +458,7 @@ function drawBottomBank(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	
 	g_modelMatrix.translate(0.0, 2.5, -17.5);
 	g_modelMatrix.rotate(45, 1.0, 0.0, 0.0);
-	drawBox(gl, n, 230.0, Math.sqrt(50), Math.sqrt(50), viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	drawBox(gl, n, 430.0, Math.sqrt(50), Math.sqrt(50), viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v1-v2-v3 front
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v3-v4-v5 right
 		0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255, 0/255,127/255,0/255,  // v0-v5-v6-v1 up
@@ -472,7 +472,7 @@ function drawBuilding(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	
 	// Big box
 	g_modelMatrix.setTranslate(0.0, 50.0, -150.0);
-	drawBox(gl, n, 230.0, 160, 100.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	drawBox(gl, n, 430.0, 160, 100.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255,  // v0-v1-v2-v3 front
 		215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255,  // v0-v3-v4-v5 right
 		215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255,  // v0-v5-v6-v1 up
@@ -482,7 +482,7 @@ function drawBuilding(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	]), null);
 	
 	// Left Leg
-	g_modelMatrix.translate(-105.0, -50.0, 40.0);
+	g_modelMatrix.translate(-205.0, -50.0, 40.0);
 	drawBox(gl, n, 20.0, 50, 20.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255,  // v0-v1-v2-v3 front
 		215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255,  // v0-v3-v4-v5 right
@@ -493,7 +493,7 @@ function drawBuilding(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	]), null);
 	
 	// Right Leg
-	g_modelMatrix.translate(210.0, 0.0, 0.0);
+	g_modelMatrix.translate(410.0, 0.0, 0.0);
 	drawBox(gl, n, 20.0, 50, 20.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255,  // v0-v1-v2-v3 front
 		215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255,  // v0-v3-v4-v5 right
@@ -504,8 +504,8 @@ function drawBuilding(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	]), null);
 	
 	// Floor
-	g_modelMatrix.translate(-105.0, 0.0, -40.0);
-	drawBox(gl, n, 230.0, 10.0, 100.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	g_modelMatrix.translate(-205.0, 0.0, -40.0);
+	drawBox(gl, n, 430.0, 10.0, 100.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255,  // v0-v1-v2-v3 front
 		215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255,  // v0-v3-v4-v5 right
 		160/255,135/255,110/255, 160/255,135/255,110/255, 160/255,135/255,110/255, 160/255,135/255,110/255,  // v0-v5-v6-v1 up
@@ -516,7 +516,7 @@ function drawBuilding(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	
 	// Gym block
 	g_modelMatrix.translate(0.0, 0.0, -30.0);
-	drawBox(gl, n, 230.0, 50.0, 40.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	drawBox(gl, n, 430.0, 50.0, 40.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		200/255,165/255,120/255, 200/255,165/255,120/255, 200/255,165/255,120/255, 200/255,165/255,120/255,  // v0-v1-v2-v3 front
 		215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255,  // v0-v3-v4-v5 right
 		215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255, 215/255,185/255,125/255,  // v0-v5-v6-v1 up
@@ -528,13 +528,89 @@ function drawBuilding(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	// Centred from floor up
 	g_modelMatrix.translate(0.0, 0.0, 82.5);
 	
+	pushMatrix(g_modelMatrix);
+		drawOuting(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	g_modelMatrix = popMatrix();
+	
+	// Right Railings
+	pushMatrix(g_modelMatrix);
+		g_modelMatrix.translate(50.0, 0.0, -2.0);
+		drawRailings(gl, n, 48.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	g_modelMatrix = popMatrix();
+	
+	// Left Railings
+	pushMatrix(g_modelMatrix);
+		g_modelMatrix.translate(-70.0, 0.0, -2.0);
+		drawRailings(gl, n, 48.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	g_modelMatrix = popMatrix();
+	
+	// Right Right Railings
+	pushMatrix(g_modelMatrix);
+		g_modelMatrix.translate(166.5, 0.0, -2.0);
+		drawRailings(gl, n, 42.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	g_modelMatrix = popMatrix();
+	
+	// Left Left Railings
+	pushMatrix(g_modelMatrix);
+		g_modelMatrix.translate(-186.5, 0.0, -2.0);
+		drawRailings(gl, n, 42.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	g_modelMatrix = popMatrix();
+	
+	g_modelMatrix.translate(-120.0, 0.0, 0.0);
+	pushMatrix(g_modelMatrix);
 	drawOuting(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	g_modelMatrix = popMatrix();
 	
-	//g_modelMatrix.translate(-80.0, 0.0, 0.0);
-	//drawOuting(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
-	
-	//g_modelMatrix.translate(160.0, 0.0, 0.0);
-	//drawOuting(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	g_modelMatrix.translate(240, 0.0, 0.0);
+	pushMatrix(g_modelMatrix);
+	drawOuting(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
+	g_modelMatrix = popMatrix();
+}
+
+function drawRailings(gl, n, width, viewProjMatrix, u_MvpMatrix, u_NormalMatrix){
+	// Top bar
+		g_modelMatrix.translate(10.0, 30.0, -2.0);
+			drawBox(gl, n, width, 2.0, 2.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v1-v2-v3 front
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v3-v4-v5 right
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v5-v6-v1 up
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v1-v6-v7-v2 left
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v7-v4-v3-v2 down
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255　  // v4-v7-v6-v5 back
+		]), null);
+		
+		// Center bar
+		g_modelMatrix.translate(0.0, -20.0, 0.0);
+			drawBox(gl, n, 3.0, 20.0, 2.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v1-v2-v3 front
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v3-v4-v5 right
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v5-v6-v1 up
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v1-v6-v7-v2 left
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v7-v4-v3-v2 down
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255　  // v4-v7-v6-v5 back
+		]), null);
+		
+		// Left bar
+		g_modelMatrix.translate(-13.0, 0.0, 0.0);
+			drawBox(gl, n, 3.0, 20.0, 2.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v1-v2-v3 front
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v3-v4-v5 right
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v5-v6-v1 up
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v1-v6-v7-v2 left
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v7-v4-v3-v2 down
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255　  // v4-v7-v6-v5 back
+		]), null);
+		
+		// Left bar
+		g_modelMatrix.translate(26.5, 0.0, 0.0);
+			drawBox(gl, n, 3.0, 20.0, 2.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v1-v2-v3 front
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v3-v4-v5 right
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v5-v6-v1 up
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v1-v6-v7-v2 left
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v7-v4-v3-v2 down
+			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255　  // v4-v7-v6-v5 back
+		]), null);
 }
 
 function drawOuting(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
@@ -740,49 +816,7 @@ function drawOuting(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 	
 	// Railings
 	pushMatrix(g_modelMatrix);
-		// Top bar
-		g_modelMatrix.translate(10.0, 30.0, -2.0);
-			drawBox(gl, n, 42.0, 2.0, 2.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v1-v2-v3 front
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v3-v4-v5 right
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v5-v6-v1 up
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v1-v6-v7-v2 left
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v7-v4-v3-v2 down
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255　  // v4-v7-v6-v5 back
-		]), null);
-		
-		// Center bar
-		g_modelMatrix.translate(0.0, -20.0, -2.0);
-			drawBox(gl, n, 3.0, 20.0, 2.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v1-v2-v3 front
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v3-v4-v5 right
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v5-v6-v1 up
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v1-v6-v7-v2 left
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v7-v4-v3-v2 down
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255　  // v4-v7-v6-v5 back
-		]), null);
-		
-		// Left bar
-		g_modelMatrix.translate(-13.0, 0.0, 0.0);
-			drawBox(gl, n, 3.0, 20.0, 2.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v1-v2-v3 front
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v3-v4-v5 right
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v5-v6-v1 up
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v1-v6-v7-v2 left
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v7-v4-v3-v2 down
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255　  // v4-v7-v6-v5 back
-		]), null);
-		
-		// Left bar
-		g_modelMatrix.translate(26.5, 0.0, 0.0);
-			drawBox(gl, n, 3.0, 20.0, 2.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v1-v2-v3 front
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v3-v4-v5 right
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v0-v5-v6-v1 up
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v1-v6-v7-v2 left
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255,  // v7-v4-v3-v2 down
-			10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255, 10/255,90/255,60/255　  // v4-v7-v6-v5 back
-		]), null);
+		drawRailings(gl, n, 48.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix)
 	g_modelMatrix = popMatrix();
 	
 	
@@ -817,8 +851,8 @@ function drawOuting(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
 }
 
 function drawWater(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
-	g_modelMatrix.setTranslate(0.0, 0.0, 0.0);
-	drawBox(gl, n, 200.0, 5, 200.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
+	g_modelMatrix.setTranslate(0.0, 0.0, 50.0);
+	drawBox(gl, n, 400.0, 5, 300.0, viewProjMatrix, u_MvpMatrix, u_NormalMatrix, new Float32Array([
 		11/255,50/255,70/255, 11/255,50/255,70/255, 11/255,50/255,70/255, 11/255,50/255,70/255,  // v0-v1-v2-v3 front
 		11/255,50/255,70/255, 11/255,50/255,70/255, 11/255,50/255,70/255, 11/255,50/255,70/255,  // v0-v3-v4-v5 right
 		11/255,50/255,70/255, 11/255,50/255,70/255, 11/255,50/255,70/255, 11/255,50/255,70/255,  // v0-v5-v6-v1 up
