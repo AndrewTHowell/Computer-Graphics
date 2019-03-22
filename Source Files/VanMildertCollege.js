@@ -1424,36 +1424,7 @@ function drawBox(gl, n, width, height, depth, viewProjMatrix, u_MvpMatrix, u_Nor
 				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
 			};
 			
-			textureObject.image.src = '../resources/grass2.jpg';
-		}
-		else if (texture == "water"){
-			// Get the storage location of u_Sampler
-			var u_Sampler = gl.getUniformLocation(gl.program, 'u_Sampler');
-			if (!u_Sampler) {
-				console.log('Failed to get the storage location of u_Sampler');
-				return false;
-			}
-			textureObject = setupTex(gl);
-			
-			textureObject.image.onload = function(){
-				gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, 1); // Flip the image's y axis
-				
-				// Assign u_Sampler to TEXTURE1
-				gl.uniform1i(u_Sampler, 1);
-				
-				// Enable texture unit1
-				gl.activeTexture(gl.TEXTURE1);
-				// Bind the texture object to the target
-				gl.bindTexture(gl.TEXTURE_2D, textureObject);
-
-				// Set the texture image
-				gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, textureObject.image);
-				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-				gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-			};
-			
-			textureObject.image.src = '../resources/grass2.jpg';
+			textureObject.image.src = '../resources/grass1.jpg';
 		}
 		else {			
 			tex = gl.createTexture();
