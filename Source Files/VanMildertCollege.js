@@ -105,6 +105,32 @@ function main() {
 
   // Register the event handler to be called on key press
   document.onkeydown = function(ev){ keydown(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix); };
+	if( typeof keydown.rotation == 'undefined' ) {
+    keydown.rotation = 0.0;
+  }
+	if( typeof keydown.position == 'undefined' ) {
+    keydown.position = [0.0, characterHeight, 200.0];
+  }
+
+	//canvas.mousemove = function(ev){ onMouseMove(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix); };
+	
+	canvas.onclick = function() {
+		canvas.requestPointerLock();
+	}
+	
+	document.addEventListener('pointerlockchange', lockChangeAlert, false);
+	document.addEventListener('mozpointerlockchange', lockChangeAlert, false);
+	
+	function lockChangeAlert() {
+		if (document.pointerLockElement === canvas || document.mozPointerLockElement === canvas) {
+			console.log('The pointer lock status is now locked');
+			canvas.addEventListener("mousemove", function(ev) {onMouseMove(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);}, false);
+		}
+		else {
+			console.log('The pointer lock status is now unlocked');
+			canvas.removeEventListener("mousemove", function(ev) {onMouseMove(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);}, false);
+		}
+	}
 	
 	draw(gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix);
 	
@@ -135,14 +161,39 @@ function toRadians (angle) {
   return angle * (Math.PI / 180);
 }
 
-function keydown(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {
-	if( typeof keydown.rotation == 'undefined' ) {
-    keydown.rotation = 0.0;
-  }
-	if( typeof keydown.position == 'undefined' ) {
-    keydown.position = [0.0, characterHeight, 200.0];
-  }
-	
+function onMouseMove(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix){
+	console.log(ev.movementX, ev.movementY)
+	if (ev.movementX < 0) { // Left
+		viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
+		viewProjMatrix.rotate(angleStep, 0.0, -1.0, 0.0)
+		viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
+		
+		keydown.rotation -= 2.0
+	}
+	else if (ev.movementX > 0) { // Right
+		viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
+		viewProjMatrix.rotate(angleStep, 0.0, 1.0, 0.0)
+		viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
+		
+		keydown.rotation -= 2.0
+	}
+	if (ev.movementY > 0) { // Down
+		viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
+		viewProjMatrix.rotate(angleStep, 1.0, 0.0, 0.0)
+		viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
+		
+		keydown.rotation -= 2.0
+	}
+	else if (ev.movementY < 0) { // Up
+		viewProjMatrix.translate(keydown.position[0], keydown.position[1], keydown.position[2])
+		viewProjMatrix.rotate(angleStep, -1.0, 0.0, 0.0)
+		viewProjMatrix.translate(-keydown.position[0], -keydown.position[1], -keydown.position[2])
+		
+		keydown.rotation += 2.0
+	}
+}
+
+function keydown(ev, gl, n, viewProjMatrix, u_MvpMatrix, u_NormalMatrix) {	
   switch (ev.keyCode) {
     case 16: // Shift key
       if (keydown.position[1] < 200.0) {
